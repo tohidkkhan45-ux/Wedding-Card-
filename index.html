@@ -15,38 +15,42 @@ body{
     min-height:100vh;
     overflow:hidden;
     font-family: Arial, sans-serif;
-    color:white;
 }
 
-/* Big Countdown */
+/* ===== Small Unique Countdown ===== */
+
 #countdown{
-    font-size:28px;
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+    font-size:14px;
     font-weight:bold;
-    margin-bottom:20px;
-    background:linear-gradient(45deg, red, gold);
-    padding:12px 25px;
-    border-radius:12px;
-    animation: glow 1.5s infinite alternate;
 }
 
-@keyframes glow{
-    from{box-shadow:0 0 10px red;}
-    to{box-shadow:0 0 25px gold;}
+.time-box{
+    padding:6px 10px;
+    border-radius:8px;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(5px);
+    text-align:center;
+    min-width:55px;
+    box-shadow:0 0 8px rgba(255,255,255,0.3);
 }
 
+.days{ color:#ff4d4d; }
+.hours{ color:#00e6e6; }
+.minutes{ color:#ffff66; }
+.seconds{ color:#ff66ff; }
+
+/* Image */
 img{
     width:90%;
     max-width:650px;
     border-radius:15px;
-    box-shadow:0 0 30px gold;
-    animation: zoom 4s infinite alternate;
+    box-shadow:0 0 25px gold;
 }
 
-@keyframes zoom{
-    from{transform:scale(1);}
-    to{transform:scale(1.05);}
-}
-
+/* Fireworks Canvas */
 canvas{
     position:fixed;
     top:0;
@@ -60,14 +64,20 @@ canvas{
 
 <body>
 
-<div id="countdown">Loading...</div>
+<div id="countdown">
+    <div class="time-box days"><span id="d">0</span><br>Days</div>
+    <div class="time-box hours"><span id="h">0</span><br>Hours</div>
+    <div class="time-box minutes"><span id="m">0</span><br>Min</div>
+    <div class="time-box seconds"><span id="s">0</span><br>Sec</div>
+</div>
 
 <img src="ChatGPT%20Image%20Feb%2020,%202026,%2009_25_35%20PM.png">
 
 <canvas id="fireworks"></canvas>
 
 <script>
-// Countdown
+
+/* Countdown Script */
 var weddingDate = new Date("October 15, 2028 22:00:00").getTime();
 
 setInterval(function(){
@@ -79,13 +89,15 @@ setInterval(function(){
     var minutes = Math.floor((distance%(1000*60*60))/(1000*60));
     var seconds = Math.floor((distance%(1000*60))/1000);
 
-    document.getElementById("countdown").innerHTML =
-    "💍 " + days+"d "+hours+"h "+minutes+"m "+seconds+"s ";
+    document.getElementById("d").innerHTML = days;
+    document.getElementById("h").innerHTML = hours;
+    document.getElementById("m").innerHTML = minutes;
+    document.getElementById("s").innerHTML = seconds;
 
 },1000);
 
 
-// Colorful Fireworks
+/* Simple Fireworks */
 var canvas = document.getElementById("fireworks");
 var ctx = canvas.getContext("2d");
 
@@ -100,29 +112,25 @@ function firework(){
     var x = Math.random()*canvas.width;
     var y = Math.random()*canvas.height/2;
 
-    for(var i=0;i<100;i++){
+    for(var i=0;i<80;i++){
         var angle = Math.random()*2*Math.PI;
-        var speed = Math.random()*5+2;
+        var speed = Math.random()*4+2;
+        var px=x, py=y;
+        var life=80;
+        var color=randomColor();
 
-        (function(angle,speed){
-            var px=x, py=y;
-            var life=100;
-            var color=randomColor();
+        (function animate(){
+            px += Math.cos(angle)*speed;
+            py += Math.sin(angle)*speed;
+            life--;
 
-            function animate(){
-                px += Math.cos(angle)*speed;
-                py += Math.sin(angle)*speed;
-                life--;
+            ctx.beginPath();
+            ctx.arc(px,py,2,0,2*Math.PI);
+            ctx.fillStyle=color;
+            ctx.fill();
 
-                ctx.beginPath();
-                ctx.arc(px,py,3,0,2*Math.PI);
-                ctx.fillStyle=color;
-                ctx.fill();
-
-                if(life>0) requestAnimationFrame(animate);
-            }
-            animate();
-        })(angle,speed);
+            if(life>0) requestAnimationFrame(animate);
+        })();
     }
 }
 
