@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Party Card</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #ff9a9e, #fad0c4, #fbc2eb);
+}
+
+/* Rotating Party Light Effect */
+body::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: repeating-radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 10%);
+    animation: rotateBg 25s linear infinite;
+}
+
+@keyframes rotateBg {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Card */
+.card {
+    position: relative;
+    width: 750px;
+    height: 450px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 25px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    text-align: center;
+    padding: 30px;
+    color: white;
+    z-index: 1;
+    transition: 1s;
+}
+
+.card:hover {
+    transform: perspective(1000px) rotateY(8deg);
+}
+
+.title {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 220px;
+}
+
+.name {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.center-text {
+    font-size: 20px;
+    margin-top: 10px;
+    padding: 0 40px;
+}
+
+/* Heart */
+.heart {
+    position: relative;
+    width: 120px;
+    height: 110px;
+    background: red;
+    transform: rotate(-45deg);
+    animation: heartbeat 1.5s infinite;
+}
+
+.heart:before,
+.heart:after {
+    content: "";
+    position: absolute;
+    width: 120px;
+    height: 110px;
+    background: red;
+    border-radius: 50%;
+}
+
+.heart:before {
+    top: -60px;
+    left: 0;
+}
+
+.heart:after {
+    left: 60px;
+    top: 0;
+}
+
+.heart-name {
+    position: absolute;
+    transform: rotate(45deg);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    top: 35px;
+    left: 20px;
+}
+
+@keyframes heartbeat {
+    0% { transform: rotate(-45deg) scale(1); }
+    50% { transform: rotate(-45deg) scale(1.1); }
+    100% { transform: rotate(-45deg) scale(1); }
+}
+
+/* Date Section */
+.date-section {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="title">💍 Shadi Mubarak 💍</div>
+
+    <div class="content">
+        <div class="name">Nazni Parvin</div>
+
+        <div class="heart">
+            <div class="heart-name">Md Tohid</div>
+        </div>
+    </div>
+
+    <div class="center-text">
+        "Do dilon ka milan hai yeh,  
+        Mohabbat ka paigham hai yeh.  
+        Khushiyon se bhara rahe har pal,  
+        Aapki zindagi ka har ek kal."
+    </div>
+
+    <div class="date-section">
+        📅 15 / 10 / 2028 (Sunday) <br>
+        ⏰ Raat 10 Baje
+    </div>
+
+</div>
+
+</body>
+</html>
