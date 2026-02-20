@@ -7,7 +7,7 @@
 <style>
 body{
     margin:0;
-    background:black;
+    background:linear-gradient(to top, #000000, #1a1a2e);
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -15,10 +15,10 @@ body{
     min-height:100vh;
     overflow:hidden;
     font-family: Arial, sans-serif;
+    color:white;
 }
 
-/* ===== Small Unique Countdown ===== */
-
+/* ===== Countdown ===== */
 #countdown{
     display:flex;
     gap:10px;
@@ -30,11 +30,10 @@ body{
 .time-box{
     padding:6px 10px;
     border-radius:8px;
-    background:rgba(255,255,255,0.1);
-    backdrop-filter:blur(5px);
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(4px);
     text-align:center;
     min-width:55px;
-    box-shadow:0 0 8px rgba(255,255,255,0.3);
 }
 
 .days{ color:#ff4d4d; }
@@ -50,14 +49,23 @@ img{
     box-shadow:0 0 25px gold;
 }
 
-/* Fireworks Canvas */
-canvas{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    z-index:-1;
+/* Floating Hearts */
+.heart{
+    position:absolute;
+    color:red;
+    font-size:20px;
+    animation: floatUp linear infinite;
+}
+
+@keyframes floatUp{
+    from{
+        transform:translateY(100vh);
+        opacity:1;
+    }
+    to{
+        transform:translateY(-10vh);
+        opacity:0;
+    }
 }
 </style>
 </head>
@@ -72,8 +80,6 @@ canvas{
 </div>
 
 <img src="ChatGPT%20Image%20Feb%2020,%202026,%2009_25_35%20PM.png">
-
-<canvas id="fireworks"></canvas>
 
 <script>
 
@@ -97,48 +103,24 @@ setInterval(function(){
 },1000);
 
 
-/* Simple Fireworks */
-var canvas = document.getElementById("fireworks");
-var ctx = canvas.getContext("2d");
+/* Floating Hearts Generator */
+function createHeart(){
+    var heart = document.createElement("div");
+    heart.className="heart";
+    heart.innerHTML="❤";
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+    heart.style.left = Math.random()*100 + "vw";
+    heart.style.fontSize = (Math.random()*20+10) + "px";
+    heart.style.animationDuration = (Math.random()*3+3) + "s";
 
-function randomColor(){
-    return "hsl(" + Math.random()*360 + ",100%,50%)";
+    document.body.appendChild(heart);
+
+    setTimeout(function(){
+        heart.remove();
+    },6000);
 }
 
-function firework(){
-    var x = Math.random()*canvas.width;
-    var y = Math.random()*canvas.height/2;
-
-    for(var i=0;i<80;i++){
-        var angle = Math.random()*2*Math.PI;
-        var speed = Math.random()*4+2;
-        var px=x, py=y;
-        var life=80;
-        var color=randomColor();
-
-        (function animate(){
-            px += Math.cos(angle)*speed;
-            py += Math.sin(angle)*speed;
-            life--;
-
-            ctx.beginPath();
-            ctx.arc(px,py,2,0,2*Math.PI);
-            ctx.fillStyle=color;
-            ctx.fill();
-
-            if(life>0) requestAnimationFrame(animate);
-        })();
-    }
-}
-
-setInterval(function(){
-    ctx.fillStyle="rgba(0,0,0,0.2)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    firework();
-},1500);
+setInterval(createHeart,500);
 
 </script>
 
