@@ -5,33 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-
 body{
     margin:0;
     background:linear-gradient(to top,#000,#1a1a2e);
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items:center;
     height:100vh;
     overflow:hidden;
     font-family:Arial;
+    color:white;
 }
+
+/* ===== Countdown ===== */
+#countdown{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.time-box{
+    padding:6px 10px;
+    border-radius:8px;
+    background:rgba(255,255,255,0.08);
+    text-align:center;
+    min-width:55px;
+}
+
+.days{color:#ff4d4d;}
+.hours{color:#00e6e6;}
+.minutes{color:#ffff66;}
+.seconds{color:#ff66ff;}
 
 /* ===== 3D Scene ===== */
 .scene{
     perspective:1200px;
 }
 
-/* Card Container */
 .card{
     width:320px;
-    height:auto;
     transform-style:preserve-3d;
     transform:rotateY(90deg);
     animation:openCard 2s ease forwards;
 }
 
-/* Opening Animation */
 @keyframes openCard{
     from{
         transform:rotateY(90deg) scale(0.7);
@@ -43,7 +63,6 @@ body{
     }
 }
 
-/* Image Style */
 .card img{
     width:100%;
     border-radius:15px;
@@ -59,21 +78,23 @@ body{
 }
 
 @keyframes floatUp{
-    from{
-        transform:translateY(100vh);
-        opacity:1;
-    }
-    to{
-        transform:translateY(-10vh);
-        opacity:0;
-    }
+    from{transform:translateY(100vh);opacity:1;}
+    to{transform:translateY(-10vh);opacity:0;}
 }
-
 </style>
 </head>
 
 <body>
 
+<!-- Countdown -->
+<div id="countdown">
+    <div class="time-box days"><span id="d">0</span><br>Days</div>
+    <div class="time-box hours"><span id="h">0</span><br>Hours</div>
+    <div class="time-box minutes"><span id="m">0</span><br>Min</div>
+    <div class="time-box seconds"><span id="s">0</span><br>Sec</div>
+</div>
+
+<!-- 3D Card -->
 <div class="scene">
     <div class="card">
         <img src="5ade0876d175df6d89321c02d51eef05%20%281%29.jpg">
@@ -82,7 +103,28 @@ body{
 
 <script>
 
-/* Floating Hearts Effect */
+/* ===== Countdown Script ===== */
+var weddingDate = new Date("October 15, 2028 22:00:00").getTime();
+
+setInterval(function(){
+
+    var now = new Date().getTime();
+    var distance = weddingDate - now;
+
+    var days = Math.floor(distance/(1000*60*60*24));
+    var hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    var minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+    var seconds = Math.floor((distance%(1000*60))/1000);
+
+    document.getElementById("d").innerHTML = days;
+    document.getElementById("h").innerHTML = hours;
+    document.getElementById("m").innerHTML = minutes;
+    document.getElementById("s").innerHTML = seconds;
+
+},1000);
+
+
+/* ===== Floating Hearts ===== */
 function createHeart(){
     var heart=document.createElement("div");
     heart.className="heart";
