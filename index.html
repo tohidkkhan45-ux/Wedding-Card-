@@ -3,91 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Special Card</title>
+
+<title>Wedding Invitation</title>
 
 <style>
 
 body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  font-family:Arial;
-  overflow:hidden;
-  color:white;
+    margin:0;
+    background:black;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    font-family:Arial;
 }
 
-/* COUNTDOWN */
+/* Countdown */
 #countdown{
-  position:absolute;
-  top:20px;
-  font-size:28px;
-  font-weight:bold;
-  letter-spacing:2px;
+    position:absolute;
+    top:20px;
+    width:100%;
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+    letter-spacing:2px;
+    z-index:5;
 }
 
-/* CARD AREA */
-.scene{
-  perspective:1200px;
-}
-
+/* Card container */
 .card{
-  width:300px;
-  height:420px;
-  position:relative;
-  transform-style:preserve-3d;
-  transition:transform 1.5s;
-  cursor:pointer;
+    perspective:1200px;
 }
 
-.card.open{
-  transform:rotateY(180deg);
+.card-inner{
+    width:320px;
+    height:500px;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:1.5s;
+}
+
+.card.open .card-inner{
+    transform:rotateY(180deg);
 }
 
 .side{
-  position:absolute;
-  width:100%;
-  height:100%;
-  backface-visibility:hidden;
-  border-radius:15px;
-  overflow:hidden;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    position:absolute;
+    width:100%;
+    height:100%;
+    backface-visibility:hidden;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 20px 40px rgba(0,0,0,0.8);
 }
 
-/* FRONT */
-.front{
-  background:#111;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.side img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 
-.front img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-/* BACK */
 .back{
-  background:#000;
-  transform:rotateY(180deg);
+    transform:rotateY(180deg);
 }
 
-.back img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
+/* Fireworks */
+.firework{
+    position:absolute;
+    width:6px;
+    height:6px;
+    background:white;
+    border-radius:50%;
+    animation:blast 1s linear infinite;
 }
 
-/* FIREWORKS CANVAS */
-canvas{
-  position:fixed;
-  top:0;
-  left:0;
-  pointer-events:none;
+@keyframes blast{
+    0%{transform:scale(1);opacity:1;}
+    100%{transform:scale(12);opacity:0;}
 }
 
 </style>
@@ -95,118 +88,95 @@ canvas{
 
 <body>
 
+<!-- Countdown -->
 <div id="countdown"></div>
 
-<div class="scene">
-  <div class="card" id="card">
+<!-- Card -->
+<div class="card" onclick="openCard()">
+    <div class="card-inner" id="cardInner">
 
-    <!-- FRONT IMAGE -->
-    <div class="side front">
-      <img src="ChatGPT Image Feb 20, 2026, 09_25_35 PM.png">
+        <!-- FRONT -->
+        <div class="side front">
+            <img src="5ade0876d175df6d89321c02d51eef05%20(1).jpg">
+        </div>
+
+        <!-- BACK (same image) -->
+        <div class="side back">
+            <img src="5ade0876d175df6d89321c02d51eef05%20(1).jpg">
+        </div>
+
     </div>
-
-    <!-- BACK IMAGE -->
-    <div class="side back">
-      <img src="5ade0876d175df6d89321c02d51eef05 (1).jpg">
-    </div>
-
-  </div>
 </div>
-
-<canvas id="fireworks"></canvas>
 
 <script>
 
-/* ================= COUNTDOWN ================= */
+/* =====================
+   COUNTDOWN FIXED
+===================== */
 
-const dateString="15.10.2028";
-const parts=dateString.split(".");
-const targetDate=new Date(parts[2],parts[1]-1,parts[0]);
+const dateString = "15.10.2028";
+const parts = dateString.split(".");
+
+const targetDate = new Date(
+  parts[2],
+  parts[1]-1,
+  parts[0],
+  22,0,0   // raat 10 baje
+);
 
 function updateCountdown(){
 
-  const now=new Date().getTime();
-  const distance=targetDate-now;
+    const now = new Date().getTime();
+    const distance = targetDate - now;
 
-  if(distance<=0){
-    document.getElementById("countdown").innerHTML="🎉 OPEN 🎉";
-    return;
-  }
+    if(distance<=0){
+        document.getElementById("countdown").innerHTML="🎉 SHADI MUBARAK 🎉";
+        return;
+    }
 
-  const d=Math.floor(distance/(1000*60*60*24));
-  const h=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-  const m=Math.floor((distance%(1000*60*60))/(1000*60));
-  const s=Math.floor((distance%(1000*60))/1000);
+    const d=Math.floor(distance/(1000*60*60*24));
+    const h=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    const m=Math.floor((distance%(1000*60*60))/(1000*60));
+    const s=Math.floor((distance%(1000*60))/1000);
 
-  document.getElementById("countdown").innerHTML=
-  `<span style="color:#ff4d4d">${d}D</span> :
-   <span style="color:#4dff88">${h}H</span> :
-   <span style="color:#4db8ff">${m}M</span> :
-   <span style="color:#ffd24d">${s}S</span>`;
+    document.getElementById("countdown").innerHTML=
+    `<span style="color:#ff4d4d">${d}D</span> :
+     <span style="color:#4dff88">${h}H</span> :
+     <span style="color:#4db8ff">${m}M</span> :
+     <span style="color:#ffd24d">${s}S</span>`;
 }
 
 setInterval(updateCountdown,1000);
 updateCountdown();
 
 
-/* ================= CARD OPEN ================= */
+/* =====================
+   CARD OPEN EFFECT
+===================== */
 
-const card=document.getElementById("card");
-
-card.addEventListener("click",()=>{
-  card.classList.toggle("open");
-  startFireworks();
-});
-
-
-/* ================= FIREWORKS ================= */
-
-const canvas=document.getElementById("fireworks");
-const ctx=canvas.getContext("2d");
-
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-let particles=[];
-
-function createFirework(){
-  for(let i=0;i<80;i++){
-    particles.push({
-      x:canvas.width/2,
-      y:canvas.height/2,
-      vx:(Math.random()-0.5)*8,
-      vy:(Math.random()-0.5)*8,
-      life:100,
-      color:`hsl(${Math.random()*360},100%,60%)`
-    });
-  }
+function openCard(){
+    document.querySelector(".card").classList.toggle("open");
+    createFireworks();
 }
 
-function startFireworks(){
-  createFirework();
+
+/* =====================
+   FIREWORK EFFECT
+===================== */
+
+function createFireworks(){
+    for(let i=0;i<25;i++){
+        let f=document.createElement("div");
+        f.className="firework";
+
+        f.style.left=Math.random()*100+"vw";
+        f.style.top=Math.random()*100+"vh";
+
+        document.body.appendChild(f);
+
+        setTimeout(()=>f.remove(),1000);
+    }
 }
-
-function animate(){
-  requestAnimationFrame(animate);
-
-  ctx.fillStyle="rgba(0,0,0,0.2)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  particles.forEach((p,i)=>{
-    p.x+=p.vx;
-    p.y+=p.vy;
-    p.life--;
-
-    ctx.fillStyle=p.color;
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,3,0,Math.PI*2);
-    ctx.fill();
-
-    if(p.life<=0) particles.splice(i,1);
-  });
-}
-
-animate();
 
 </script>
 
