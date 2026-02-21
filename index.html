@@ -1,145 +1,212 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Wedding Invitation</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Special Card</title>
 
 <style>
+
 body{
-    margin:0;
-    background:linear-gradient(to top,#000,#1a1a2e);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    overflow:hidden;
-    font-family:Arial;
-    color:white;
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  font-family:Arial;
+  overflow:hidden;
+  color:white;
 }
 
-/* ===== Countdown ===== */
+/* COUNTDOWN */
 #countdown{
-    display:flex;
-    gap:10px;
-    margin-bottom:15px;
-    font-size:14px;
-    font-weight:bold;
+  position:absolute;
+  top:20px;
+  font-size:28px;
+  font-weight:bold;
+  letter-spacing:2px;
 }
 
-.time-box{
-    padding:6px 10px;
-    border-radius:8px;
-    background:rgba(255,255,255,0.08);
-    text-align:center;
-    min-width:55px;
-}
-
-.days{color:#ff4d4d;}
-.hours{color:#00e6e6;}
-.minutes{color:#ffff66;}
-.seconds{color:#ff66ff;}
-
-/* ===== 3D Scene ===== */
+/* CARD AREA */
 .scene{
-    perspective:1200px;
+  perspective:1200px;
 }
 
 .card{
-    width:320px;
-    transform-style:preserve-3d;
-    transform:rotateY(90deg);
-    animation:openCard 2s ease forwards;
+  width:300px;
+  height:420px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform 1.5s;
+  cursor:pointer;
 }
 
-@keyframes openCard{
-    from{
-        transform:rotateY(90deg) scale(0.7);
-        opacity:0;
-    }
-    to{
-        transform:rotateY(0deg) scale(1);
-        opacity:1;
-    }
+.card.open{
+  transform:rotateY(180deg);
 }
 
-.card img{
-    width:100%;
-    border-radius:15px;
-    box-shadow:0 0 35px gold;
+.side{
+  position:absolute;
+  width:100%;
+  height:100%;
+  backface-visibility:hidden;
+  border-radius:15px;
+  overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* Floating Hearts */
-.heart{
-    position:absolute;
-    color:red;
-    font-size:18px;
-    animation:floatUp linear infinite;
+/* FRONT */
+.front{
+  background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-@keyframes floatUp{
-    from{transform:translateY(100vh);opacity:1;}
-    to{transform:translateY(-10vh);opacity:0;}
+.front img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
+
+/* BACK */
+.back{
+  background:#000;
+  transform:rotateY(180deg);
+}
+
+.back img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* FIREWORKS CANVAS */
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- Countdown -->
-<div id="countdown">
-    <div class="time-box days"><span id="d">0</span><br>Days</div>
-    <div class="time-box hours"><span id="h">0</span><br>Hours</div>
-    <div class="time-box minutes"><span id="m">0</span><br>Min</div>
-    <div class="time-box seconds"><span id="s">0</span><br>Sec</div>
+<div id="countdown"></div>
+
+<div class="scene">
+  <div class="card" id="card">
+
+    <!-- FRONT IMAGE -->
+    <div class="side front">
+      <img src="ChatGPT Image Feb 20, 2026, 09_25_35 PM.png">
+    </div>
+
+    <!-- BACK IMAGE -->
+    <div class="side back">
+      <img src="5ade0876d175df6d89321c02d51eef05 (1).jpg">
+    </div>
+
+  </div>
 </div>
 
-<!-- 3D Card -->
-<div class="scene">
-    <div class="card">
-        <img src="5ade0876d175df6d89321c02d51eef05%20%281%29.jpg">
-    </div>
-</div>
+<canvas id="fireworks"></canvas>
 
 <script>
 
-/* ===== Countdown Script ===== */
-var weddingDate = new Date("October 15, 2028 22:00:00").getTime();
+/* ================= COUNTDOWN ================= */
 
-setInterval(function(){
+const dateString="15.10.2028";
+const parts=dateString.split(".");
+const targetDate=new Date(parts[2],parts[1]-1,parts[0]);
 
-    var now = new Date().getTime();
-    var distance = weddingDate - now;
+function updateCountdown(){
 
-    var days = Math.floor(distance/(1000*60*60*24));
-    var hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-    var minutes = Math.floor((distance%(1000*60*60))/(1000*60));
-    var seconds = Math.floor((distance%(1000*60))/1000);
+  const now=new Date().getTime();
+  const distance=targetDate-now;
 
-    document.getElementById("d").innerHTML = days;
-    document.getElementById("h").innerHTML = hours;
-    document.getElementById("m").innerHTML = minutes;
-    document.getElementById("s").innerHTML = seconds;
+  if(distance<=0){
+    document.getElementById("countdown").innerHTML="🎉 OPEN 🎉";
+    return;
+  }
 
-},1000);
+  const d=Math.floor(distance/(1000*60*60*24));
+  const h=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+  const m=Math.floor((distance%(1000*60*60))/(1000*60));
+  const s=Math.floor((distance%(1000*60))/1000);
 
-
-/* ===== Floating Hearts ===== */
-function createHeart(){
-    var heart=document.createElement("div");
-    heart.className="heart";
-    heart.innerHTML="❤";
-
-    heart.style.left=Math.random()*100+"vw";
-    heart.style.fontSize=(Math.random()*20+10)+"px";
-    heart.style.animationDuration=(Math.random()*3+3)+"s";
-
-    document.body.appendChild(heart);
-
-    setTimeout(()=>heart.remove(),6000);
+  document.getElementById("countdown").innerHTML=
+  `<span style="color:#ff4d4d">${d}D</span> :
+   <span style="color:#4dff88">${h}H</span> :
+   <span style="color:#4db8ff">${m}M</span> :
+   <span style="color:#ffd24d">${s}S</span>`;
 }
 
-setInterval(createHeart,600);
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+
+/* ================= CARD OPEN ================= */
+
+const card=document.getElementById("card");
+
+card.addEventListener("click",()=>{
+  card.classList.toggle("open");
+  startFireworks();
+});
+
+
+/* ================= FIREWORKS ================= */
+
+const canvas=document.getElementById("fireworks");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+
+function createFirework(){
+  for(let i=0;i<80;i++){
+    particles.push({
+      x:canvas.width/2,
+      y:canvas.height/2,
+      vx:(Math.random()-0.5)*8,
+      vy:(Math.random()-0.5)*8,
+      life:100,
+      color:`hsl(${Math.random()*360},100%,60%)`
+    });
+  }
+}
+
+function startFireworks(){
+  createFirework();
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+
+  ctx.fillStyle="rgba(0,0,0,0.2)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  particles.forEach((p,i)=>{
+    p.x+=p.vx;
+    p.y+=p.vy;
+    p.life--;
+
+    ctx.fillStyle=p.color;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,3,0,Math.PI*2);
+    ctx.fill();
+
+    if(p.life<=0) particles.splice(i,1);
+  });
+}
+
+animate();
 
 </script>
 
